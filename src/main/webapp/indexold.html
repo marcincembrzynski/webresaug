@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html ng-app="app">
+    <head>
+        <title>App</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <script src="/webresaug/js/app.js" ></script>
+        <link href="/webresaug/css/style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div>Index</div>
+
+        <h3>Services</h3>
+        <div ng-controller="servicesController">
+
+            <p>name {{name}}</p>
+
+            <label ng-repeat="service in services">
+                <input type="radio" name="selectedService" ng-model="$parent.selectedService" ng-click="getDatesForService(service.id)" ng-value="{{service}}" />{{service.name}}
+            </label>
+
+
+
+
+
+            <h3>Dates</h3>     
+            <p>dates: {{dates}}</p>
+
+            <label ng-repeat="serviceDate in dates">
+                <input type="radio" name="selectedServiceDate" ng-model="$parent.selectedServiceDate" ng-click="getAppointmentsForDate(serviceDate.serviceDate)" ng-value="{{serviceDate}}" />{{serviceDate.serviceDate}}
+            </label>
+
+            <h3>Appointments </h3> 
+
+            <label ng-repeat="appointment in appointments" >
+                <input type="radio" name="selectedAppointment" ng-model="$parent.selectedAppointment"  ng-value="{{appointment}}" />
+
+                {{appointment.dateTime}}, {{appointment.provider.name}}
+            </label>
+
+            <p><button ng-click="addToBasket(selectedAppointment)" ng-show="selectedAppointment">Add To Basket</button></p>
+
+            <h3>selected Appointment: {{selectedAppointment}}</h3>
+
+
+            <h3>basket: </h3>
+
+
+            <ul>
+                <li ng-repeat="appointment in basket.appointments">
+                    
+                    {{appointment.service.name}}, {{appointment.service.duration}}, {{appointment.dateTime}}, {{appointment.appointmentEnd}} 
+                    <button ng-click="deleteBasketAppointment(appointment.id)">x</button></li>
+            </ul>
+
+            <h2>Checkout</h2>
+
+
+            <form id="myContainer" method="post" action="/webresaug/resources/checkout"></form>
+            <script>
+                        window.paypalCheckoutReady = function () {
+                            paypal.checkout.setup('6SKVYN4PJAAZ2', {
+                                environment: 'sandbox',
+                                container: 'myContainer'
+                            });
+                        };
+            </script>
+            <script src="//www.paypalobjects.com/api/checkout.js" async></script>
+
+        </div>
+    </body>
+</html>

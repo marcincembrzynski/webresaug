@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough" ng-app="app">
+    <h:head >
+        <title>Reservation</title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <script src="/webresaug/js/app.js" ></script>
+        <link href="/webresaug/css/style.css" rel="stylesheet" />
+    </h:head>
+    <h:body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div ng-controller="servicesController">
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Services</div>
+                            <div class="panel-body">
+                                <div class="radio" ng-repeat="service in services">
+                                    <label>
+                                        <input type="radio" name="selectedService" ng-model="$parent.selectedService" ng-click="getDatesForService(service.id)" ng-value="{{service}}" />{{service.name}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="panel panel-default" ng-show="dates">
+                            <div class="panel-heading">Dates</div>
+                            <div class="panel-body">
+                                <div class="radio" ng-repeat="serviceDate in dates">
+                                    <label>
+                                        <input type="radio" name="selectedServiceDate" ng-model="$parent.selectedServiceDate" ng-click="getAppointmentsForDate(serviceDate.serviceDate)" ng-value="{{serviceDate}}" />{{serviceDate.serviceDate}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-default" ng-show="appointments">
+                            <div class="panel-heading">Appointments</div>
+                            <div class="panel-body">
+                                <div class="radio" ng-repeat="appointment in appointments" >
+                                    <label>
+                                        <input type="radio" name="selectedAppointment" ng-model="$parent.selectedAppointment"  ng-value="{{appointment}}" />
+
+                                        {{appointment.dateTime}}, {{appointment.provider.name}}
+                                    </label>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <p><button class="btn btn-default" ng-click="addToBasket(selectedAppointment)" ng-show="selectedAppointment">Add To Basket</button></p>
+
+
+
+                        <nav class="navbar navbar-default navbar-fixed-bottom" ng-show="selectedAppointment">
+                            <div class="container">
+                                <button class="btn btn-default navbar-btn" ng-click="addToBasket(selectedAppointment)" ><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Add To Basket</button>
+                            </div>
+                        </nav>
+
+
+                        <nav class="navbar navbar-default navbar-fixed-top">
+                            <div class="container">
+                                <p>top</p>
+                            </div>
+                        </nav>
+
+
+                        <p>basket: </p>
+                        <p>basket total value: {{basket.totalValue}}</p>
+
+
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="appointment in basket.appointments">
+
+                                {{appointment.service.name}}, {{appointment.service.duration}}, {{appointment.dateTime}}, {{appointment.appointmentEnd}}, 
+                                
+                                price: {{appointment.service.price}}
+                                
+                                <button class="btn badge" ng-click="deleteBasketAppointment(appointment.id)">x</button></li>
+                        </ul>
+
+
+
+
+
+                        <section>
+
+
+                            <form id="myContainer" method="post" action="/webresaug/resources/checkout" ></form>
+                            <script>
+                                        window.paypalCheckoutReady = function () {
+                                            paypal.checkout.setup('6SKVYN4PJAAZ2', {
+                                                environment: 'sandbox',
+                                                container: 'myContainer'
+                                            });
+                                        };
+                            </script>
+                            <script src="//www.paypalobjects.com/api/checkout.js" async="true"></script>  
+
+                        </section>
+
+                    </div>
+
+                    <ul>
+                        <li>to do:</li>
+                       
+                        <li>user registeration</li>
+                        <li>user authentication</li>
+                        <li>basket calculation</li>
+                        <li></li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </h:body>
+</html>
+
